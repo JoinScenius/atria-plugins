@@ -1,0 +1,31 @@
+{
+  "name": "atria",
+  "version": "1.0.0",
+  "description": "Atria creative intelligence for AI coding agents: search the ad library, read competitors, analyze your own ad accounts, and go from finding to concept to brief to finished copy with skills that share one workspace.",
+  "author": { "name": "Atria", "url": "https://tryatria.com" },
+  "homepage": "https://docs.tryatria.com",
+  "repository": "https://github.com/JoinScenius/atria-plugins",
+  "license": "MIT",
+  "keywords": ["atria", "advertising", "creative", "ads", "competitor", "mcp"],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Atria",
+    "shortDescription": "Ad library, competitor tracking, and ad-account analysis",
+    "longDescription": "Search Atria's ad library, track competitor advertisers, and analyze performance for connected Facebook and TikTok ad accounts. Bundled skills cover the weekly account report, competitor teardowns and swipe files; the Skill Hub loads everything else Atria publishes.",
+    "developerName": "Atria",
+    "category": "Business & Operations",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://tryatria.com",
+    "privacyPolicyURL": "https://www.tryatria.com/privacy-policy",
+    "termsOfServiceURL": "https://www.tryatria.com/terms-of-service",
+    "logo": "./assets/logo.png",
+    "composerIcon": "./assets/logo.png",
+    "defaultPrompt": [
+      "Weekly report for my ad account: last complete week versus the week before",
+      "Tear down what my top competitor is running right now",
+      "Build a swipe file of UGC testimonial ads in my category"
+    ],
+    "screenshots": []
+  }
+}

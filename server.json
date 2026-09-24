@@ -1,0 +1,25 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.tryatria/atria",
+  "title": "Atria",
+  "description": "Search Atria's ad library, track competitors, and analyze your Facebook and TikTok ad accounts.",
+  "version": "1.0.1",
+  "websiteUrl": "https://docs.tryatria.com",
+  "repository": {
+    "url": "https://github.com/JoinScenius/atria-plugins",
+    "source": "github"
+  },
+  "icons": [
+    {
+      "src": "https://cdn.tryatria.com/static/brand/atria-icon-pink.png",
+      "mimeType": "image/png",
+      "sizes": ["512x512"]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://api.tryatria.com/mcp"
+    }
+  ]
+}

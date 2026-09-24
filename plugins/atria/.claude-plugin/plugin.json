@@ -1,0 +1,11 @@
+{
+  "name": "atria",
+  "displayName": "Atria",
+  "version": "1.0.0",
+  "description": "Atria creative intelligence for AI coding agents: search the ad library, read competitors, analyze your own ad accounts, and go from finding to concept to brief to finished copy with skills that share one workspace.",
+  "author": { "name": "Atria", "url": "https://tryatria.com" },
+  "homepage": "https://docs.tryatria.com",
+  "repository": "https://github.com/JoinScenius/atria-plugins",
+  "license": "MIT",
+  "keywords": ["atria", "advertising", "creative", "ads", "competitor", "mcp"]
+}

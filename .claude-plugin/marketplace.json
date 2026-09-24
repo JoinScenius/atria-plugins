@@ -1,0 +1,19 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "atria",
+  "description": "Atria creative intelligence for AI coding agents: ad library search, competitor tracking, and ad-account analysis, plus workflow skills.",
+  "owner": {
+    "name": "Atria",
+    "url": "https://tryatria.com"
+  },
+  "plugins": [
+    {
+      "name": "atria",
+      "displayName": "Atria",
+      "source": "./plugins/atria",
+      "description": "Atria MCP server plus bundled skills for the weekly account report, competitor teardowns and swipe files, with the Skill Hub entry for everything else Atria publishes.",
+      "category": "productivity",
+      "homepage": "https://docs.tryatria.com"
+    }
+  ]
+}
