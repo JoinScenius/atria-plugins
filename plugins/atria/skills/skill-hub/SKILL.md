@@ -12,13 +12,11 @@ Atria publishes its skills through the Skill Hub and hands them to the model
 with one tool, `load_skill`. This plugin bundles a few of them so they work
 without a round trip: `account-weekly-report`, `competitor-teardown`, `setup`, `skill-hub`, `swipe-file`. Everything else, including Atria's
 other official skills and anything this workspace wrote or enabled, is loaded
-from here. Plugin version: **1.0.0**.
+from here. Plugin version: **1.1.0**.
 
 ## 1. Find
 
-- The catalog is already in the `load_skill` tool description under
-  "Available to this workspace". Read it there first; it is in context on
-  every turn.
+- If the `load_skill` description is available, its "Available to this workspace" section is a shortlist. Hosts may load tool definitions lazily; do not assume the catalog is present on every turn.
 - When the description says more skills were dropped for length, or the user
   asks "what skills are there", call `load_skill` with no arguments for the
   full list. The list is filtered to what this workspace has enabled in
@@ -53,7 +51,7 @@ and continue with the bundled skills. Do not retry.
 ## 4. Version
 
 If a `load_skill` response carries a minimum or latest plugin version and
-1.0.0 is behind it, print the update command for the current
+1.1.0 is behind it, print the update command for the current
 client: `/plugin marketplace update atria` in Claude Code,
 `codex plugin marketplace upgrade atria` in Codex. Third-party marketplaces do
 not update on their own.

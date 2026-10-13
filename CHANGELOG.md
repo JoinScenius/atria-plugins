@@ -3,6 +3,15 @@
 All notable changes to the Atria plugin are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver.
 
+## [1.1.0] - 2026-10-13
+
+### Changed
+
+- Upgrade Inspo brand discovery, competitor research, and swipe-file workflows.
+- Refine ad-account reporting and permission handling.
+- Improve connection checks and Skill Hub compatibility.
+- Update MCP Registry metadata to version 1.1.0.
+
 ## [1.0.0] - 2026-09-24
 
 ### Added

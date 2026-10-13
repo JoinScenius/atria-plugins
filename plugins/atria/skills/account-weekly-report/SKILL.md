@@ -24,10 +24,10 @@ source in the report.
 ## Ground rules
 
 - Two bodies of data. The ad library is other advertisers' creative seen from outside, with no spend. The ad-account tools are this workspace's own spend and results. Say which one a figure came from; a conclusion from one does not transfer to the other.
-- Start from an id the tools gave you. Advertiser ids and library ad ids are prefixed `m` or `t`; an account id is an Atria UUID; a brand id names one of the workspace's own brands and is never an advertiser id; a platform ad id is the platform's own, not a library ad id. A wrong id returns an empty result, not an error.
-- Saving, following, and creating boards or brand entries change state teammates see; notes stay private to the user. Check what exists before creating anything, and confirm before writing.
-- Transcription and image generation spend the workspace's AI credits. Read first, count what is needed, then ask.
-- Call `list_notes` once per session before answering about this workspace. Write back what the user settles with `write_note`, never the data the tools can fetch again.
+- Use IDs returned by the matching tools: `advertiser_id` is source-prefixed `m`/`t`; owned-brand and Inspo unified-brand IDs are both UUIDs but belong to different entities. Never interchange them or pass a platform ad ID as a library ad ID.
+- Boards, saved ads, tracking and brand entries are shared state; notes are private to the authenticated user in this workspace. Check existing records before creating. Obtain authorization before writes; a request to save already authorizes that action, so do not ask again.
+- Transcription and image generation spend the workspace's AI credits. Read first and count what is needed. Obtain authorization before spending credits; existing explicit authorization is sufficient.
+- Call `list_notes` once per session before answering about this workspace. Use `write_note` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
 
 What this skill does not do: read the creatives one by one. That is
 `creative-breakdown`, and this report ends by pointing there when the numbers
@@ -133,4 +133,3 @@ each week.
 A creative question ("why is the top spender fading", "what are the winners
 doing differently") is the skill named creative-breakdown. In the plugin,
 the skill-hub entry loads it; elsewhere, load it by name.
-

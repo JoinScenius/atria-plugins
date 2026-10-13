@@ -6,17 +6,18 @@ disable-model-invocation: true
 allowed-tools:
   - mcp__plugin_atria_atria__list_ad_accounts
   - mcp__plugin_atria_atria__list_ad_boards
-  - mcp__plugin_atria_atria__list_followed_advertisers
   - mcp__plugin_atria_atria__list_notes
   - mcp__plugin_atria_atria__list_owned_brands
   - mcp__plugin_atria_atria__load_skill
+  - mcp__plugin_atria_atria__search_advertisers
+  - mcp__plugin_atria_atria__search_inspo_brands
   - Bash(claude mcp list*)
   - Bash(codex mcp list*)
 ---
 # Atria setup check
 
 Read-only. This skill never writes to the workspace and never calls a tool
-that spends credits. Plugin version: **1.0.0**.
+that spends credits. Plugin version: **1.1.0**.
 
 ## 1. Is the server connected?
 
@@ -51,19 +52,20 @@ the user decides which copy stays.
 
 Call these in order and stop at the first failure:
 
-1. `list_notes` - the notes this user keeps in Atria. Read the titles.
+1. `list_notes` - this user's private notes in this workspace. Read the titles.
    If a note looks like standing context for this workspace (a brand
    direction, constraints, preferences), mention it; the user will not repeat
    it.
 2. `list_ad_accounts` - connected ad accounts with platform and id.
 3. `list_owned_brands` - the workspace's own brands.
 4. `list_ad_boards` - shared boards.
-5. `list_followed_advertisers` with `window=last_30d` - tracked competitors
-   and how much of the tracking allowance is used.
-6. `load_skill` with no arguments, if the tool is in the tool list - the
+5. `search_advertisers` with `scope=tracked` - tracked competitors
+   (this listing does not report the manual tracking quota).
+6. `search_inspo_brands` with `body={scope:"followed", followed:{limit:20, offset:0}}` - followed unified brands, brand quota and over-limit state. This is separate from tracked advertisers.
+7. `load_skill` with no arguments, if the tool is in the tool list - the
    skills this workspace has enabled in Atria's Skill Hub. If the response
    carries a minimum or latest plugin version, compare it with
-   1.0.0 and, when this plugin is behind, print the update
+   1.1.0 and, when this plugin is behind, print the update
    command for the current client (`/plugin marketplace update atria` in
    Claude Code, `codex plugin marketplace upgrade atria` in Codex). If the
    tool is not in the list, the server has not opened the Skill Hub yet; say
@@ -74,7 +76,7 @@ Call these in order and stop at the first failure:
 One compact summary:
 
 - Connection status and any duplicate servers found.
-- Counts: ad accounts (by platform), brands, boards, followed advertisers,
+- Counts: ad accounts (by platform), owned brands, boards, followed unified brands and tracked advertisers,
   notes, hub skills.
 - Which skills fit what the workspace has. Bundled in this plugin:
   `account-weekly-report`, `competitor-teardown`, `setup`, `skill-hub`, `swipe-file`. Everything else Atria publishes is loaded through

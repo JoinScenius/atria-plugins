@@ -6,6 +6,7 @@ allowed-tools:
   - mcp__plugin_atria_atria__get_ad_account_ad
   - mcp__plugin_atria_atria__get_ad_account_creative_tags
   - mcp__plugin_atria_atria__get_ad_board
+  - mcp__plugin_atria_atria__get_inspo_brand
   - mcp__plugin_atria_atria__get_library_ad_creative_tags
   - mcp__plugin_atria_atria__list_ad_account_ads
   - mcp__plugin_atria_atria__list_ad_accounts
@@ -13,6 +14,7 @@ allowed-tools:
   - mcp__plugin_atria_atria__list_library_taggings
   - mcp__plugin_atria_atria__list_notes
   - mcp__plugin_atria_atria__search_ad_templates
+  - mcp__plugin_atria_atria__search_inspo_brands
   - mcp__plugin_atria_atria__search_library_ads
 ---
 # Swipe file
@@ -37,10 +39,12 @@ means organic content. The complete argument guide for the search is the
 ## Ground rules
 
 - Two bodies of data. The ad library is other advertisers' creative seen from outside, with no spend. The ad-account tools are this workspace's own spend and results. Say which one a figure came from; a conclusion from one does not transfer to the other.
-- Start from an id the tools gave you. Advertiser ids and library ad ids are prefixed `m` or `t`; an account id is an Atria UUID; a brand id names one of the workspace's own brands and is never an advertiser id; a platform ad id is the platform's own, not a library ad id. A wrong id returns an empty result, not an error.
-- Saving, following, and creating boards or brand entries change state teammates see; notes stay private to the user. Check what exists before creating anything, and confirm before writing.
-- Transcription and image generation spend the workspace's AI credits. Read first, count what is needed, then ask.
-- Call `list_notes` once per session before answering about this workspace. Write back what the user settles with `write_note`, never the data the tools can fetch again.
+- Use IDs returned by the matching tools: `advertiser_id` is source-prefixed `m`/`t`; owned-brand and Inspo unified-brand IDs are both UUIDs but belong to different entities. Never interchange them or pass a platform ad ID as a library ad ID.
+- Boards, saved ads, tracking and brand entries are shared state; notes are private to the authenticated user in this workspace. Check existing records before creating. Obtain authorization before writes; a request to save already authorizes that action, so do not ask again.
+- Transcription and image generation spend the workspace's AI credits. Read first and count what is needed. Obtain authorization before spending credits; existing explicit authorization is sufficient.
+- Call `list_notes` once per session before answering about this workspace. Use `write_note` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
+
+When the reference is a competitor brand, resolve it with `search_inspo_brands` (library name/host) then `get_inspo_brand`. Search ads per relevant roster advertiser with advertiser scope; no brand scope exists. Label sampled coverage and deduplicate ad IDs; an advertiser can serve several brands. Reading library ads does not require following a brand or changing advertiser tracking.
 
 ## 1. Settle the scope in one exchange
 
@@ -185,8 +189,8 @@ the workspace saved regardless of board, use `scope=saved` with
 `order=saved_newest`.
 
 Then `get_library_ad_creative_tags` in batches of 20 for hooks, personas and
-angles. Ads from advertisers nobody follows come back untagged
-(`advertiser_not_followed`); report them as untagged rather than as having
+angles. Ads outside the tagging pipeline can return
+(`not_in_tagging_pipeline`); report them as untagged rather than as having
 no angle.
 
 ### 3. Analyze
@@ -232,7 +236,7 @@ the user approves each call. Propose the list, get a yes, then act.
 | `advertiser` | `advertiser_id` | one advertiser's ads |
 | `ad_board` | `ad_board_id` | one of the workspace's boards |
 | `saved` | - | every ad the workspace saved; allows `order=saved_newest` |
-| `followed_advertisers` | - | every advertiser the workspace tracks |
+| `tracked_advertisers` | - | every advertiser the workspace tracks |
 
 **Dates.** `launched_after` / `launched_before` bound when an ad first ran
 ("what did they launch last month"). `active_since` keeps ads still running
