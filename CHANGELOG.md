@@ -3,6 +3,17 @@
 All notable changes to the Atria plugin are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver.
 
+## [1.2.1] - 2026-11-02
+
+### Changed
+
+- Atria Ad Maker has its own logo: the Atria rabbit with an "Ad Maker"
+  wordmark, so it no longer looks identical to the Atria plugin. The Codex
+  composer icon stays the rabbit alone, because the wordmark is unreadable at
+  that size.
+- Atria Ad Maker moves to 0.1.1. The Atria plugin moves to 1.2.1 with this
+  release; its skills and MCP connection are unchanged.
+
 ## [1.2.0] - 2026-11-02
 
 ### Added

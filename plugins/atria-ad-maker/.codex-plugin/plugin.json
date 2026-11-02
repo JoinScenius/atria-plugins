@@ -1,6 +1,6 @@
 {
   "name": "atria-ad-maker",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Create image and video ads with Atria Ad Maker, from media generation to editable video projects.",
   "author": {
     "name": "Atria",
@@ -32,7 +32,7 @@
     "privacyPolicyURL": "https://www.tryatria.com/privacy-policy",
     "termsOfServiceURL": "https://www.tryatria.com/terms-of-service",
     "logo": "./assets/logo.png",
-    "composerIcon": "./assets/logo.png",
+    "composerIcon": "./assets/composer-icon.png",
     "defaultPrompt": [
       "Create an image ad from this product brief",
       "Make a video ad from this script",
