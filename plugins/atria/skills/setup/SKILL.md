@@ -17,7 +17,7 @@ allowed-tools:
 # Atria setup check
 
 Read-only. This skill never writes to the workspace and never calls a tool
-that spends credits. Plugin version: **1.2.1**.
+that spends credits. Plugin version: **1.2.2**.
 
 ## 1. Is the server connected?
 
@@ -65,7 +65,7 @@ Call these in order and stop at the first failure:
 7. `load_skill` with no arguments, if the tool is in the tool list - the
    skills this workspace has enabled in Atria's Skill Hub. If the response
    carries a minimum or latest plugin version, compare it with
-   1.2.1 and, when this plugin is behind, print the update
+   1.2.2 and, when this plugin is behind, print the update
    command for the current client (`/plugin marketplace update atria` in
    Claude Code, `codex plugin marketplace upgrade atria` in Codex). If the
    tool is not in the list, the server has not opened the Skill Hub yet; say

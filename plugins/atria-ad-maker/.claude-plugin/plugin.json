@@ -1,7 +1,7 @@
 {
   "name": "atria-ad-maker",
   "displayName": "Atria Ad Maker",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Create image and video ads with Atria Ad Maker, from media generation to editable video projects.",
   "author": {
     "name": "Atria",
