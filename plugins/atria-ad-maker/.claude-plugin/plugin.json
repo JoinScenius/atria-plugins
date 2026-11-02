@@ -1,0 +1,21 @@
+{
+  "name": "atria-ad-maker",
+  "displayName": "Atria Ad Maker",
+  "version": "0.1.0",
+  "description": "Create image and video ads with Atria Ad Maker, from media generation to editable video projects.",
+  "author": {
+    "name": "Atria",
+    "url": "https://tryatria.com"
+  },
+  "homepage": "https://docs.tryatria.com",
+  "repository": "https://github.com/JoinScenius/atria-plugins",
+  "license": "MIT",
+  "keywords": [
+    "atria",
+    "ad-maker",
+    "advertising",
+    "image",
+    "video",
+    "mcp"
+  ]
+}

@@ -87,6 +87,18 @@ server's MCP Registry record is [`server.json`](server.json).
   - `skill-hub` loads more Atria skills when you need them, such as creative breakdowns, briefs and
     ad copy. Some of these need a paid Atria plan.
 
+## Atria Ad Maker
+
+Install **Atria Ad Maker** from the same marketplace to create image and video ads
+from your brief, script or media, and edit video projects with Raya. Generation
+uses workspace credits. It connects independently to
+`https://api.tryatria.com/mcp/ad-maker` and currently includes no bundled skills.
+
+```
+/plugin install atria-ad-maker@atria          # Claude Code
+codex plugin add atria-ad-maker@atria         # Codex CLI
+```
+
 ## Update
 
 ```

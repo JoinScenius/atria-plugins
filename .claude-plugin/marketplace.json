@@ -14,6 +14,14 @@
       "description": "Atria MCP server plus bundled skills for the weekly account report, competitor teardowns and swipe files, with the Skill Hub entry for everything else Atria publishes.",
       "category": "productivity",
       "homepage": "https://docs.tryatria.com"
+    },
+    {
+      "name": "atria-ad-maker",
+      "displayName": "Atria Ad Maker",
+      "source": "./plugins/atria-ad-maker",
+      "description": "Create image and video ads with Atria Ad Maker, from media generation to editable video projects.",
+      "category": "productivity",
+      "homepage": "https://docs.tryatria.com"
     }
   ]
 }

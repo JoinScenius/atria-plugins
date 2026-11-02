@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "atria-ad-maker": {
+      "type": "http",
+      "url": "https://api.tryatria.com/mcp/ad-maker",
+      "oauth_resource": "https://api.tryatria.com/mcp"
+    }
+  }
+}

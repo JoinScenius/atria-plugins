@@ -3,6 +3,21 @@
 All notable changes to the Atria plugin are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver.
 
+## [1.2.0] - 2026-11-02
+
+### Added
+
+- Atria Ad Maker (`atria-ad-maker` 0.1.0), a separate plugin in the same
+  marketplace. It connects to `https://api.tryatria.com/mcp/ad-maker` to create
+  image and video ads from a brief, script or media, and to edit video projects
+  with Raya. Generation uses workspace credits. It bundles no skills.
+- README instructions for installing Atria Ad Maker in Claude Code and Codex.
+
+### Changed
+
+- The Atria plugin moves to 1.2.0 with this release; its skills and MCP
+  connection are unchanged.
+
 ## [1.1.0] - 2026-10-13
 
 ### Changed
