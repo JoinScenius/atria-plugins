@@ -3,6 +3,15 @@
 All notable changes to the Atria plugin are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver.
 
+## [1.2.3] - 2026-11-12
+
+### Changed
+
+- Update the Claude Atria plugin and marketplace descriptions to cover image and
+  video creation alongside advertising research and ad-account analysis.
+- Expand the README with Raya's project page, direct project editing, example
+  requests, and workspace-credit guidance. Clarify the focused Ad Maker plugin.
+
 ## [1.2.2] - 2026-11-02
 
 ### Changed
