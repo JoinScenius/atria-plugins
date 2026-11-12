@@ -2,8 +2,6 @@
 name: skill-hub
 description: >
   Find and load Atria skills from the Skill Hub for work the bundled skills do not cover. Lists what this workspace has enabled, loads a skill by name and runs it, follows a skill's references, and turns a finished session into a draft skill. Use when the user asks what Atria can do, names a skill, asks for a kind of creative work no bundled skill covers, or wants to save the current workflow as a skill.
-allowed-tools:
-  - mcp__plugin_atria_atria__load_skill
 ---
 
 # Skill Hub

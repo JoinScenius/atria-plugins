@@ -2,20 +2,6 @@
 name: swipe-file
 description: >
   Build a swipe file of reference ads from Atria's ad library and file it on a shared board. Three modes: search by theme, angle, format, industry or market; find library lookalikes of the workspace's own winning ads; or review what a board already holds. Use when the user wants inspiration, examples of a kind of ad, ads about a topic or using a hook, ads like their best performers, a reference set for a brief, or a read of one of their boards.
-allowed-tools:
-  - mcp__plugin_atria_atria__get_ad_account_ad
-  - mcp__plugin_atria_atria__get_ad_account_creative_tags
-  - mcp__plugin_atria_atria__get_ad_board
-  - mcp__plugin_atria_atria__get_inspo_brand
-  - mcp__plugin_atria_atria__get_library_ad_creative_tags
-  - mcp__plugin_atria_atria__list_ad_account_ads
-  - mcp__plugin_atria_atria__list_ad_accounts
-  - mcp__plugin_atria_atria__list_ad_boards
-  - mcp__plugin_atria_atria__list_library_taggings
-  - mcp__plugin_atria_atria__list_notes
-  - mcp__plugin_atria_atria__search_ad_templates
-  - mcp__plugin_atria_atria__search_inspo_brands
-  - mcp__plugin_atria_atria__search_library_ads
 ---
 # Swipe file
 

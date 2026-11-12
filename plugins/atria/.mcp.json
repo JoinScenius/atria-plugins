@@ -2,8 +2,7 @@
   "mcpServers": {
     "atria": {
       "type": "http",
-      "url": "https://api.tryatria.com/mcp",
-      "oauth_resource": "https://api.tryatria.com/mcp"
+      "url": "https://api.tryatria.com/mcp"
     }
   }
 }
