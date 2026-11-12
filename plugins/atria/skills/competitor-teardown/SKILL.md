@@ -2,18 +2,6 @@
 name: competitor-teardown
 description: >
   Analyze one competitor's unified brand or a specified advertiser in Atria's ad library. Live creatives, how long each has run, launch cadence, formats, hooks and CTAs, landing pages, a reach and durability read, and the evidence filed on an ad board with the conclusion written back. Use when the user names one competitor or brand and asks what they are advertising, wants that advertiser torn down, or asks what it launched over a period. For several competitors read together load competitive-landscape.
-allowed-tools:
-  - mcp__plugin_atria_atria__get_advertiser
-  - mcp__plugin_atria_atria__get_inspo_brand
-  - mcp__plugin_atria_atria__get_library_ad_creative_tags
-  - mcp__plugin_atria_atria__get_library_ad_transcript
-  - mcp__plugin_atria_atria__get_tracked_advertiser_stats
-  - mcp__plugin_atria_atria__list_ad_boards
-  - mcp__plugin_atria_atria__list_library_taggings
-  - mcp__plugin_atria_atria__list_notes
-  - mcp__plugin_atria_atria__resolve_advertiser
-  - mcp__plugin_atria_atria__search_inspo_brands
-  - mcp__plugin_atria_atria__search_library_ads
 ---
 
 # Competitor teardown

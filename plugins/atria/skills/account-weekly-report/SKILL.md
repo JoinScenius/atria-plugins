@@ -2,14 +2,6 @@
 name: account-weekly-report
 description: >
   Weekly performance report for one of the workspace's own connected ad accounts. Spend, results and cost per conversion on the account's own event against the week before, top ads by spend and by efficiency, creative tags at a glance, and the read written back to Atria. Monthly or any custom window on request. Use when the user asks how their account performed, wants a weekly or monthly report, asks which ads are spending, or wants two periods compared. For a qualitative read of the top creatives load creative-breakdown.
-allowed-tools:
-  - mcp__plugin_atria_atria__get_ad_account_ad
-  - mcp__plugin_atria_atria__get_ad_account_summary
-  - mcp__plugin_atria_atria__list_ad_account_ads
-  - mcp__plugin_atria_atria__list_ad_account_creative_tags
-  - mcp__plugin_atria_atria__list_ad_account_metrics
-  - mcp__plugin_atria_atria__list_ad_accounts
-  - mcp__plugin_atria_atria__list_notes
 ---
 
 # Account weekly report

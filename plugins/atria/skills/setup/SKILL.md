@@ -3,16 +3,6 @@ name: setup
 description: >
   Check the Atria plugin connection, find duplicate Atria servers, and run a read-only smoke test. Also compares the installed plugin version with what the server expects. Use when the user runs /atria:setup, asks whether Atria is connected, or sees Atria tools listed more than once.
 disable-model-invocation: true
-allowed-tools:
-  - mcp__plugin_atria_atria__list_ad_accounts
-  - mcp__plugin_atria_atria__list_ad_boards
-  - mcp__plugin_atria_atria__list_notes
-  - mcp__plugin_atria_atria__list_owned_brands
-  - mcp__plugin_atria_atria__load_skill
-  - mcp__plugin_atria_atria__search_advertisers
-  - mcp__plugin_atria_atria__search_inspo_brands
-  - Bash(claude mcp list*)
-  - Bash(codex mcp list*)
 ---
 # Atria setup check
 
