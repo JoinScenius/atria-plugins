@@ -2,6 +2,18 @@
 name: competitor-teardown
 description: >
   Analyze one competitor's unified brand or a specified advertiser in Atria's ad library. Live creatives, how long each has run, launch cadence, formats, hooks and CTAs, landing pages, a reach and durability read, and the evidence filed on an ad board with the conclusion written back. Use when the user names one competitor or brand and asks what they are advertising, wants that advertiser torn down, or asks what it launched over a period. For several competitors read together load competitive-landscape.
+allowed-tools:
+  - mcp__plugin_atria_atria__inspo_advertiser_get
+  - mcp__plugin_atria_atria__inspo_brand_get
+  - mcp__plugin_atria_atria__inspo_ad_tagging_get
+  - mcp__plugin_atria_atria__inspo_ad_transcript_get
+  - mcp__plugin_atria_atria__inspo_advertiser_tracked_stats_get
+  - mcp__plugin_atria_atria__inspo_board_list
+  - mcp__plugin_atria_atria__inspo_ad_tagging_aggregate
+  - mcp__plugin_atria_atria__note_list
+  - mcp__plugin_atria_atria__inspo_advertiser_resolve
+  - mcp__plugin_atria_atria__inspo_brand_search
+  - mcp__plugin_atria_atria__inspo_ad_search
 ---
 
 # Competitor teardown
@@ -17,28 +29,28 @@ numbers.
 - Use IDs returned by the matching tools: `advertiser_id` is source-prefixed `m`/`t`; owned-brand and Inspo unified-brand IDs are both UUIDs but belong to different entities. Never interchange them or pass a platform ad ID as a library ad ID.
 - Boards, saved ads, tracking and brand entries are shared state; notes are private to the authenticated user in this workspace. Check existing records before creating. Obtain authorization before writes; a request to save already authorizes that action, so do not ask again.
 - Transcription and image generation spend the workspace's AI credits. Read first and count what is needed. Obtain authorization before spending credits; existing explicit authorization is sufficient.
-- Call `list_notes` once per session before answering about this workspace. Use `write_note` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
+- Call `note_list` once per session before answering about this workspace. Use `note_write` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
 
 One advertiser, in depth. A set of competitors read together, share of voice,
 saturation and whitespace against the workspace's own brand is
 `competitive-landscape`; hand over when the user names more than one.
 
 
-For explicit advertiser tracking, call `set_advertiser_tracking` with `body={advertiser_id, tracked:true}`. This is separate from following a unified brand; removing explicit tracking may leave automatic brand coverage intact.
+For explicit advertiser tracking, call `inspo_advertiser_tracking_set` with `body={advertiser_id, tracked:true}`. This is separate from following a unified brand; removing explicit tracking may leave automatic brand coverage intact.
 
 ## 1. Resolve the brand or advertiser
 
-For a competitor brand name or domain, start with `search_inspo_brands` using `body.scope=library` and `body.library.brand_name` or `host`. Select by name/domain, then `get_inspo_brand` for its linked advertisers. Inspect `is_main_advertiser`, `is_official_advertiser` and the user's market/platform intent. A whole-brand teardown covers the relevant roster, or explicitly states which advertisers were sampled. The summary's `main_advertiser_ads` is not a brand-wide total.
+For a competitor brand name or domain, start with `inspo_brand_search` using `body.scope=library` and `body.library.brand_name` or `host`. Select by name/domain, then `inspo_brand_get` for its linked advertisers. Inspect `is_main_advertiser`, `is_official_advertiser` and the user's market/platform intent. A whole-brand teardown covers the relevant roster, or explicitly states which advertisers were sampled. The summary's `main_advertiser_ads` is not a brand-wide total.
 
-For a specified advertiser or page URL, use `resolve_advertiser` then `get_advertiser`. A fuzzy match needs checking; do not choose solely by ad volume. Its `brands` are candidates, not a one-to-one brand identity; inspect an explicit candidate with `get_inspo_brand` when needed. `tracked` is this workspace's effective advertiser tracking state.
+For a specified advertiser or page URL, use `inspo_advertiser_resolve` then `inspo_advertiser_get`. A fuzzy match needs checking; do not choose solely by ad volume. Its `brands` are candidates, not a one-to-one brand identity; inspect an explicit candidate with `inspo_brand_get` when needed. `tracked` is this workspace's effective advertiser tracking state.
 
-Missing search results do not prove that the workspace needs to track the advertiser. If the user authorizes following an unlisted Meta page, `follow_inspo_brand` with `body.url` can request collection. For normal following use the selected unified `brand_id`; this consumes brand quota. Explicit `set_advertiser_tracking` is a separate manual allowance.
+Missing search results do not prove that the workspace needs to track the advertiser. If the user authorizes following an unlisted Meta page, `inspo_brand_follow` with `body.url` can request collection. For normal following use the selected unified `brand_id`; this consumes brand quota. Explicit `inspo_advertiser_tracking_set` is a separate manual allowance.
 
-When a follow change is part of the user's request, `follow_inspo_brand` takes exactly one of `body.brand_id`, `body.advertiser_id` or `body.url`. Prefer the selected brand UUID when candidates are ambiguous. Read `follow_quota` and `follow_limit_exceeded`; do not manually track every roster advertiser. `unfollow_inspo_brand` takes `body.brand_id` and may leave advertisers tracked through manual or other brand coverage. `set_advertiser_tracking` with `body.tracked=false` only removes explicit tracking; inspect the returned effective state and `manual_tracking_quota`. Neither action edits an owned-brand competitor association.
+When a follow change is part of the user's request, `inspo_brand_follow` takes exactly one of `body.brand_id`, `body.advertiser_id` or `body.url`. Prefer the selected brand UUID when candidates are ambiguous. Read `follow_quota` and `follow_limit_exceeded`; do not manually track every roster advertiser. `inspo_brand_unfollow` takes `body.brand_id` and may leave advertisers tracked through manual or other brand coverage. `inspo_advertiser_tracking_set` with `body.tracked=false` only removes explicit tracking; inspect the returned effective state and `manual_tracking_quota`. Neither action edits an owned-brand competitor association.
 
 ## 2. Pull what is live, not what exists
 
-Use `search_library_ads` with `scope=advertiser` for each selected `advertiser_id`. There is no unified-brand scope. These are advertiser-wide ads and may serve multiple brands; do not attribute every ad to the selected brand without creative evidence.
+Use `inspo_ad_search` with `scope=advertiser` for each selected `advertiser_id`. There is no unified-brand scope. These are advertiser-wide ads and may serve multiple brands; do not attribute every ad to the selected brand without creative evidence.
 The default is what they are running right now: an advertiser's live set is
 its current bet; its archive is everything it ever tried.
 
@@ -61,20 +73,20 @@ into one row.
 
 ## 3. Read the creative
 
-- `get_library_ad_creative_tags` with up to 20 `ad_ids` per call gives hook,
+- `inspo_ad_tagging_get` with up to 20 `ad_ids` per call gives hook,
   persona, angle, USP, desire, emotion. Send the ads worth understanding, not
   every row.
 - If tags return `untagged_reason=not_in_tagging_pipeline`, explain the pipeline coverage limit. Workspace tracking and brand following do not guarantee immediate tagging; do not promise that enabling either fixes missing tags.
-- For the shape of the whole pool, `list_library_taggings` with
+- For the shape of the whole pool, `inspo_ad_tagging_aggregate` with
   `scope=advertiser`, one `tagging_type` per call (`hook`, then `persona`,
   then `ad_angle`), `window=last_90d`. Each group's `tagging_key` goes back
-  into `search_library_ads` to see the ads behind it.
+  into `inspo_ad_search` to see the ads behind it.
 - If the workspace tracks the advertiser, call
-  `get_tracked_advertiser_stats` **once** with `window=last_30d` (or the
+  `inspo_advertiser_tracked_stats_get` **once** with `window=last_30d` (or the
   window the user asked about). It is expensive; do not re-run it with small
   changes. Read each count next to its own `based_on_ads`.
-- Video scripts: `get_library_ad_transcript` is free and usually has the text
-  already. `transcribe_library_ad` spends the workspace's AI credits and is not
+- Video scripts: `inspo_ad_transcript_get` is free and usually has the text
+  already. `inspo_ad_transcript_generate` spends the workspace's AI credits and is not
   part of this skill's default flow. If a transcript is missing and the user
   wants it, say how many ads are involved and ask before transcribing.
 
@@ -107,13 +119,13 @@ Sections, in this order:
 
 File evidence and save a conclusion when the user authorized those actions. Boards are shared; the note remains private and is not automatically loaded by Raya. Otherwise show the proposed filing and note draft.
 
-1. `list_ad_boards` first. Reuse a board that already covers this competitor;
-   only when none does, propose a name and call `create_ad_board` after the
+1. `inspo_board_list` first. Reuse a board that already covers this competitor;
+   only when none does, propose a name and call `inspo_board_create` after the
    user agrees. Nothing rejects a duplicate name.
-2. `save_library_ad` for the 5 to 10 ads that carry the argument, not all of
+2. `inspo_ad_save` for the 5 to 10 ads that carry the argument, not all of
    them. A board everyone scrolls past is the same as no board. Saving is
    workspace-wide.
-3. `write_note` with what the teardown settled: the angles they own, the ones
+3. `note_write` with what the teardown settled: the angles they own, the ones
    they leave alone, and which of those is worth testing. Name the board so
    the next session can reopen it. Do not copy the ad data into the note; the
    search tools remain the source of truth.

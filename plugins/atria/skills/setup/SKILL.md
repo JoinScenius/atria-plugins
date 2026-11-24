@@ -3,11 +3,21 @@ name: setup
 description: >
   Check the Atria plugin connection, find duplicate Atria servers, and run a read-only smoke test. Also compares the installed plugin version with what the server expects. Use when the user runs /atria:setup, asks whether Atria is connected, or sees Atria tools listed more than once.
 disable-model-invocation: true
+allowed-tools:
+  - mcp__plugin_atria_atria__analytics_ad_account_list
+  - mcp__plugin_atria_atria__inspo_board_list
+  - mcp__plugin_atria_atria__note_list
+  - mcp__plugin_atria_atria__brand_owned_brand_list
+  - mcp__plugin_atria_atria__skill_load
+  - mcp__plugin_atria_atria__inspo_advertiser_search
+  - mcp__plugin_atria_atria__inspo_brand_search
+  - Bash(claude mcp list*)
+  - Bash(codex mcp list*)
 ---
 # Atria setup check
 
 Read-only. This skill never writes to the workspace and never calls a tool
-that spends credits. Plugin version: **1.2.2**.
+that spends credits. Plugin version: **1.2.3**.
 
 ## 1. Is the server connected?
 
@@ -42,20 +52,20 @@ the user decides which copy stays.
 
 Call these in order and stop at the first failure:
 
-1. `list_notes` - this user's private notes in this workspace. Read the titles.
+1. `note_list` - this user's private notes in this workspace. Read the titles.
    If a note looks like standing context for this workspace (a brand
    direction, constraints, preferences), mention it; the user will not repeat
    it.
-2. `list_ad_accounts` - connected ad accounts with platform and id.
-3. `list_owned_brands` - the workspace's own brands.
-4. `list_ad_boards` - shared boards.
-5. `search_advertisers` with `scope=tracked` - tracked competitors
+2. `analytics_ad_account_list` - connected ad accounts with platform and id.
+3. `brand_owned_brand_list` - the workspace's own brands.
+4. `inspo_board_list` - shared boards.
+5. `inspo_advertiser_search` with `scope=tracked` - tracked competitors
    (this listing does not report the manual tracking quota).
-6. `search_inspo_brands` with `body={scope:"followed", followed:{limit:20, offset:0}}` - followed unified brands, brand quota and over-limit state. This is separate from tracked advertisers.
-7. `load_skill` with no arguments, if the tool is in the tool list - the
+6. `inspo_brand_search` with `body={scope:"followed", followed:{limit:20, offset:0}}` - followed unified brands, brand quota and over-limit state. This is separate from tracked advertisers.
+7. `skill_load` with no arguments, if the tool is in the tool list - the
    skills this workspace has enabled in Atria's Skill Hub. If the response
    carries a minimum or latest plugin version, compare it with
-   1.2.2 and, when this plugin is behind, print the update
+   1.2.3 and, when this plugin is behind, print the update
    command for the current client (`/plugin marketplace update atria` in
    Claude Code, `codex plugin marketplace upgrade atria` in Codex). If the
    tool is not in the list, the server has not opened the Skill Hub yet; say

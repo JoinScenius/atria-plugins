@@ -3,24 +3,18 @@
 All notable changes to the Atria plugin are recorded here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/); versions follow semver.
 
-## [1.2.4] - 2026-11-12
-
-### Fixed
-
-- Remove bundled skills' MCP and shell tool pre-approvals to meet the Claude
-  directory policy for organizations without Verified status. Tool calls now
-  follow the user's existing permission settings; workflow instructions remain.
-- Remove the unsupported `oauth_resource` field from the shared Atria MCP
-  connection configuration. The HTTPS endpoint and OAuth sign-in remain.
-
-## [1.2.3] - 2026-11-12
+## [1.2.3] - 2026-11-24
 
 ### Changed
 
-- Update the Claude Atria plugin and marketplace descriptions to cover image and
-  video creation alongside advertising research and ad-account analysis.
-- Expand the README with Raya's project page, direct project editing, example
-  requests, and workspace-credit guidance. Clarify the focused Ad Maker plugin.
+- The skills call Atria's tools by their hierarchical names, for example
+  `inspo_ad_search` instead of `search_library_ads` and `skill_load` instead
+  of `load_skill`, and pre-approve the read tools under those names. The
+  server still accepts the old names, so earlier versions keep working.
+  If you added Atria tools to your own permission allow or deny lists, update
+  those entries to the new names (for example
+  `mcp__plugin_atria_atria__inspo_ad_search`); rules that use the old names no
+  longer match.
 
 ## [1.2.2] - 2026-11-02
 

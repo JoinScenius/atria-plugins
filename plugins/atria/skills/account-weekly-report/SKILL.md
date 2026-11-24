@@ -2,6 +2,14 @@
 name: account-weekly-report
 description: >
   Weekly performance report for one of the workspace's own connected ad accounts. Spend, results and cost per conversion on the account's own event against the week before, top ads by spend and by efficiency, creative tags at a glance, and the read written back to Atria. Monthly or any custom window on request. Use when the user asks how their account performed, wants a weekly or monthly report, asks which ads are spending, or wants two periods compared. For a qualitative read of the top creatives load creative-breakdown.
+allowed-tools:
+  - mcp__plugin_atria_atria__analytics_ad_get
+  - mcp__plugin_atria_atria__analytics_ad_account_summary_get
+  - mcp__plugin_atria_atria__analytics_ad_list
+  - mcp__plugin_atria_atria__analytics_creative_tagging_aggregate
+  - mcp__plugin_atria_atria__analytics_metric_list
+  - mcp__plugin_atria_atria__analytics_ad_account_list
+  - mcp__plugin_atria_atria__note_list
 ---
 
 # Account weekly report
@@ -19,7 +27,7 @@ source in the report.
 - Use IDs returned by the matching tools: `advertiser_id` is source-prefixed `m`/`t`; owned-brand and Inspo unified-brand IDs are both UUIDs but belong to different entities. Never interchange them or pass a platform ad ID as a library ad ID.
 - Boards, saved ads, tracking and brand entries are shared state; notes are private to the authenticated user in this workspace. Check existing records before creating. Obtain authorization before writes; a request to save already authorizes that action, so do not ask again.
 - Transcription and image generation spend the workspace's AI credits. Read first and count what is needed. Obtain authorization before spending credits; existing explicit authorization is sufficient.
-- Call `list_notes` once per session before answering about this workspace. Use `write_note` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
+- Call `note_list` once per session before answering about this workspace. Use `note_write` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
 
 What this skill does not do: read the creatives one by one. That is
 `creative-breakdown`, and this report ends by pointing there when the numbers
@@ -28,12 +36,12 @@ raise a creative question.
 
 ## 1. Account, event, target
 
-1. `list_notes` first: the user may have recorded the account's target, its
+1. `note_list` first: the user may have recorded the account's target, its
    conversion event, or how they want reports shaped.
-2. `list_ad_accounts`. One account: use it. Several: ask, unless the user
+2. `analytics_ad_account_list`. One account: use it. Several: ask, unless the user
    named one. Note the platform: TikTok accounts have no creative tags and
    rank on fewer metrics. `account_id` is the Atria UUID from this call.
-3. `list_ad_account_metrics` once, `kind=standard`; again with
+3. `analytics_metric_list` once, `kind=standard`; again with
    `kind=facebook_custom_conversion` or `kind=atria_custom_metric` when the
    account's goal event is not in the standard set. Use `id` everywhere;
    display names are editable and collide.
@@ -61,28 +69,28 @@ Change is reported as both the absolute difference and the percentage:
 
 ## 3. Read the numbers
 
-1. `get_ad_account_summary` for the window and again for the comparison
+1. `analytics_ad_account_summary_get` for the window and again for the comparison
    window. Add `metrics` (comma-separated ids, up to 20) for the goal event
    and any custom metrics.
 2. **Sanity check before reading a drop:** when the goal event falls sharply,
    pull the account's other conversion events for the same window; a
    tracking gap moves one event, a real drop moves them together. Say which
    it looks like.
-3. `list_ad_account_ads` with `sort_by=spend`, `limit=10`: where the money
+3. `analytics_ad_list` with `sort_by=spend`, `limit=10`: where the money
    went. Ranking covers the whole window.
-4. `list_ad_account_ads` sorted on the goal event's cost metric
+4. `analytics_ad_list` sorted on the goal event's cost metric
    (`sort_order=asc`) or the event count (`desc`): efficient ads that are not
    the biggest spenders. Note each one's spend so a tiny ad is not read as a
    winner.
-5. `get_ad_account_ad` with `platform_ad_id` for the two or three ads worth
+5. `analytics_ad_get` with `platform_ad_id` for the two or three ads worth
    showing: full copy, assets, campaign and ad-set names.
 6. **Trend, on request only:** 4 to 8 equal windows via `period=custom`, one
-   `get_ad_account_summary` each, for a spend and cost-per-conversion line.
+   `analytics_ad_account_summary_get` each, for a spend and cost-per-conversion line.
    Say how many calls it takes before running it.
 
 ## 4. Creative at a glance (Meta only)
 
-`list_ad_account_creative_tags` with the matching `period` (`last_7d`,
+`analytics_creative_tagging_aggregate` with the matching `period` (`last_7d`,
 `last_14d` or `last_30d`; say so when it differs from the report window) and
 `category=theme` or `media_format`. Report the two or three tags with the
 clearest spread and the `coverage.tagged_spend_share`. Buckets overlap; never
@@ -116,7 +124,7 @@ Use the account's own metric display names from `metric_names`.
 
 ## 6. Write back, then hand off
 
-Every report ends with `write_note`: on or off target, what moved and the
+Every report ends with `note_write`: on or off target, what moved and the
 cause you settled on, and any decision the user made (a new target, an ad
 the media team paused, a report cadence). Numbers stay out of the note; they
 can be re-read. Update the existing weekly note rather than adding a new one

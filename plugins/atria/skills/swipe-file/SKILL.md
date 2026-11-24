@@ -2,6 +2,20 @@
 name: swipe-file
 description: >
   Build a swipe file of reference ads from Atria's ad library and file it on a shared board. Three modes: search by theme, angle, format, industry or market; find library lookalikes of the workspace's own winning ads; or review what a board already holds. Use when the user wants inspiration, examples of a kind of ad, ads about a topic or using a hook, ads like their best performers, a reference set for a brief, or a read of one of their boards.
+allowed-tools:
+  - mcp__plugin_atria_atria__analytics_ad_get
+  - mcp__plugin_atria_atria__analytics_creative_tagging_get
+  - mcp__plugin_atria_atria__inspo_board_get
+  - mcp__plugin_atria_atria__inspo_brand_get
+  - mcp__plugin_atria_atria__inspo_ad_tagging_get
+  - mcp__plugin_atria_atria__analytics_ad_list
+  - mcp__plugin_atria_atria__analytics_ad_account_list
+  - mcp__plugin_atria_atria__inspo_board_list
+  - mcp__plugin_atria_atria__inspo_ad_tagging_aggregate
+  - mcp__plugin_atria_atria__note_list
+  - mcp__plugin_atria_atria__inspo_template_search
+  - mcp__plugin_atria_atria__inspo_brand_search
+  - mcp__plugin_atria_atria__inspo_ad_search
 ---
 # Swipe file
 
@@ -28,9 +42,9 @@ means organic content. The complete argument guide for the search is the
 - Use IDs returned by the matching tools: `advertiser_id` is source-prefixed `m`/`t`; owned-brand and Inspo unified-brand IDs are both UUIDs but belong to different entities. Never interchange them or pass a platform ad ID as a library ad ID.
 - Boards, saved ads, tracking and brand entries are shared state; notes are private to the authenticated user in this workspace. Check existing records before creating. Obtain authorization before writes; a request to save already authorizes that action, so do not ask again.
 - Transcription and image generation spend the workspace's AI credits. Read first and count what is needed. Obtain authorization before spending credits; existing explicit authorization is sufficient.
-- Call `list_notes` once per session before answering about this workspace. Use `write_note` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
+- Call `note_list` once per session before answering about this workspace. Use `note_write` for authorized saving of durable conclusions, never retrievable data. Otherwise present a draft. Raya does not automatically load these notes.
 
-When the reference is a competitor brand, resolve it with `search_inspo_brands` (library name/host) then `get_inspo_brand`. Search ads per relevant roster advertiser with advertiser scope; no brand scope exists. Label sampled coverage and deduplicate ad IDs; an advertiser can serve several brands. Reading library ads does not require following a brand or changing advertiser tracking.
+When the reference is a competitor brand, resolve it with `inspo_brand_search` (library name/host) then `inspo_brand_get`. Search ads per relevant roster advertiser with advertiser scope; no brand scope exists. Label sampled coverage and deduplicate ad IDs; an advertiser can serve several brands. Reading library ads does not require following a brand or changing advertiser tracking.
 
 ## 1. Settle the scope in one exchange
 
@@ -50,7 +64,7 @@ cannot be built without it:
 Start broad, then narrow. Typical first call:
 
 ```
-search_library_ads
+inspo_ad_search
   scope=library
   theme=[...]            # message angle
   media_format=[...]
@@ -68,9 +82,9 @@ Rules that save wasted calls:
 - `query` searches ad copy and advertiser name. It is for topics ("Black
   Friday", "protein"), not for hooks or audiences.
 - Hooks, personas and angles live in tags. Get a `tagging_key` from
-  `list_library_taggings` (`scope=industry` for a category sweep, or
+  `inspo_ad_tagging_aggregate` (`scope=industry` for a category sweep, or
   `scope=advertiser` from a seed advertiser) or from
-  `get_library_ad_creative_tags`, then pass `tagging_type` plus
+  `inspo_ad_tagging_get`, then pass `tagging_type` plus
   `tagging_key`. Never hand-write a key.
 - For "proven" ads, `max_impression_rank=5` keeps each advertiser's top five;
   `max_impression_percentile=0.1` is the relative version.
@@ -78,7 +92,7 @@ Rules that save wasted calls:
   `exclude_advertiser_ids`.
 - Two or three refinements is normal. Stop when the page is mostly relevant.
 
-`search_ad_templates` is a different set: Atria's hand-picked static
+`inspo_template_search` is a different set: Atria's hand-picked static
 references, tagged with their own `theme` vocabulary
 (`discount_promotion`, `ugc_testimonial`, `product_demo`, ...). Use it when
 the user asks how a kind of static ad is built. Its theme keys are not the
@@ -89,18 +103,18 @@ no such ad exists.
 
 When the user wants library ads like their own best performers:
 
-1. `list_ad_accounts`, then `list_ad_account_ads` with `sort_by=spend` (or
+1. `analytics_ad_account_list`, then `analytics_ad_list` with `sort_by=spend` (or
    the goal event's cost metric) for the top 5 to 10 winners.
-2. `get_ad_account_ad` for each: assets and `video_id` / `image_hash`; then
-   `get_ad_account_creative_tags` for their theme, visual hook, persona,
+2. `analytics_ad_get` for each: assets and `video_id` / `image_hash`; then
+   `analytics_creative_tagging_get` for their theme, visual hook, persona,
    core desire and offer type. Untagged winners (`not_tagged_yet`) are read
    from their copy and preview instead.
 3. Pick the two or three signals the winners share (a hook type, a persona, a
    theme). Those are the query, not the products or the brand.
 4. Translate them into library terms: `theme` enum values directly;
-   hooks, personas and angles through `list_library_taggings`
+   hooks, personas and angles through `inspo_ad_tagging_aggregate`
    (`scope=industry` for the brand's industry) to find the matching
-   `tagging_key`, then `search_library_ads` with `tagging_type` and
+   `tagging_key`, then `inspo_ad_search` with `tagging_type` and
    `tagging_key`, `collapse_variants=true`, `order=most_active`.
 5. Exclude the workspace's own advertiser id with `exclude_advertiser_ids` if
    the brand is in the library.
@@ -110,7 +124,7 @@ workspace's own account; the lookalikes are other advertisers' creative.
 
 ## 3. Read and group
 
-Pull creative tags for the ads worth keeping (`get_library_ad_creative_tags`,
+Pull creative tags for the ads worth keeping (`inspo_ad_tagging_get`,
 up to 20 ids per call). Group by what the user asked for: theme, hook,
 format, or advertiser. For each group give two or three examples with
 preview, advertiser, headline, days running.
@@ -129,15 +143,15 @@ Summarize in chat first and give the file path.
 
 Saving is a workspace act: teammates see the board and the saved ads.
 
-1. `list_ad_boards` first. Reuse a board whose `path` fits.
+1. `inspo_board_list` first. Reuse a board whose `path` fits.
 2. If none fits, propose a board name and create it only after the user
-   agrees (`create_ad_board` is not in this skill's allowed list on purpose;
+   agrees (`inspo_board_create` is not in this skill's allowed list on purpose;
    the user approves that call).
-3. Confirm the list of ads to save, then `save_library_ad` for each with
+3. Confirm the list of ads to save, then `inspo_ad_save` for each with
    `ad_board_ids` and optional `tags`. Saving is additive and safe to repeat.
 
 If the user settles on a direction while researching, record it with
-`write_note`; the ads themselves stay in the board, not in the note.
+`note_write`; the ads themselves stay in the board, not in the note.
 
 Downstream: a reference set becomes concepts and a brief in
 `creative-brief`, and finished lines in `ad-writer`.
@@ -151,18 +165,18 @@ never contain the workspace's own uploaded assets.
 
 ### 1. Find the board
 
-`list_ad_boards` returns the whole tree flat, one row per board, with `path`
+`inspo_board_list` returns the whole tree flat, one row per board, with `path`
 already assembled (`Q3 launch / Hooks / UGC`) and `ads_filed_here` counting
 ads filed directly in that board. Match the user's name against `path`; when
 two boards could match, show both paths and ask.
 
-`get_ad_board` adds the direct children. A parent's count does not include
+`inspo_board_get` adds the direct children. A parent's count does not include
 its children, so a review of a parent means reviewing each child too. Say
 which boards the review covers.
 
 ### 2. Read the ads
 
-`search_library_ads` with `scope=ad_board` and `ad_board_id`. Page through
+`inspo_ad_search` with `scope=ad_board` and `ad_board_id`. Page through
 with `cursor` until `page.cursor` is empty (`page_size=20`). Ask for the
 fields the review needs:
 `ad_id, advertiser_name, title, body_excerpt, cta_type, media_format,
@@ -174,7 +188,7 @@ makes a board review different from a library search. To review everything
 the workspace saved regardless of board, use `scope=saved` with
 `order=saved_newest`.
 
-Then `get_library_ad_creative_tags` in batches of 20 for hooks, personas and
+Then `inspo_ad_tagging_get` in batches of 20 for hooks, personas and
 angles. Ads outside the tagging pipeline can return
 (`not_in_tagging_pipeline`); report them as untagged rather than as having
 no angle.
@@ -208,13 +222,13 @@ section for the limits of the reading. Give the file path.
 ### 5. Tidying
 
 Only on an explicit request. Removing an ad from a board
-(`remove_library_ad_from_ad_board`) or unsaving it (`unsave_library_ad`) is
+(`inspo_board_ad_remove`) or unsaving it (`inspo_ad_unsave`) is
 visible to the whole team and neither is in this skill's allowed list, so
 the user approves each call. Propose the list, get a yes, then act.
 
 ## Search filters
 
-`search_library_ads` finds every library ad; `scope` decides where it looks.
+`inspo_ad_search` finds every library ad; `scope` decides where it looks.
 
 | `scope` | Needs | Searches |
 |---|---|---|
@@ -241,8 +255,8 @@ needs plus `ad_id`. `page_size` is 1-20; continue with `cursor`.
 
 **Text versus tags.** `query` searches ad copy and advertiser name: topics,
 products, events. Hooks, personas, angles, USPs, desires and emotions live in
-tags: get a `tagging_key` from `list_library_taggings` or
-`get_library_ad_creative_tags`, then pass `tagging_type` plus `tagging_key`.
+tags: get a `tagging_key` from `inspo_ad_tagging_aggregate` or
+`inspo_ad_tagging_get`, then pass `tagging_type` plus `tagging_key`.
 Never hand-write a key; searching `query` for a hook returns noise.
 
 **Creative.** `media_format` (image, video, carousel, other);
@@ -283,14 +297,14 @@ ads; `max_impression_percentile=0.1` is the relative version;
 `min_reach_pct_change` and `reach_pct_change_period`. Rank, trend and page
 likes are Meta signals and drop every TikTok ad.
 
-**Taggings.** `list_library_taggings` groups a set of ads by one dimension:
+**Taggings.** `inspo_ad_tagging_aggregate` groups a set of ads by one dimension:
 `tagging_type` (hook, persona, ad_angle, usp, desire, emotion, theme,
 creative, ad_copy, headline, landing_page) × `scope` (`advertiser`,
 `advertiser_set`, `industry`) × `window` (up to `last_180d`); `order` by
 `ads`, `share`, `longest_running` or `most_recent`. Each group's
 `tagging_key` goes straight back into the search.
 
-**Templates are a different set.** `search_ad_templates` is Atria's
+**Templates are a different set.** `inspo_template_search` is Atria's
 hand-picked static references with its own `theme` vocabulary
 (discount_promotion, before_after, ugc_testimonial, product_demo, lifestyle,
 problem_solution, feature_highlight, social_proof, urgency_scarcity,
